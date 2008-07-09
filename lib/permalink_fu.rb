@@ -67,9 +67,7 @@ module PermalinkFu
 protected
   def create_unique_permalink
     return unless should_create_permalink?
-    if send(self.class.permalink_field).to_s.empty?
-      send("#{self.class.permalink_field}=", create_permalink_for(self.class.permalink_attributes))
-    end
+    send("#{self.class.permalink_field}=", create_permalink_for(self.class.permalink_attributes))
     limit   = self.class.columns_hash[self.class.permalink_field].limit
     base    = send("#{self.class.permalink_field}=", send(self.class.permalink_field)[0..limit - 1])
     counter = 1
@@ -100,7 +98,7 @@ private
       evaluate_method(self.class.permalink_options[:if])
     elsif self.class.permalink_options[:unless]
       !evaluate_method(self.class.permalink_options[:unless])
-    else
+    elsif send(self.class.permalink_field).to_s.empty?
       true
     end
   end
